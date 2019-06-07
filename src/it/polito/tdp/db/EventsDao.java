@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,33 @@ public class EventsDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null ;
+		}
+	}
+	
+	public List<Year> getAnni(){
+		
+		String sql = "SELECT DISTINCT YEAR(e.reported_date) AS anni " + 
+				"FROM `events` e";
+		
+		try {
+			
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			List<Year> anni = new ArrayList<>();
+			
+			ResultSet rs = st.executeQuery();
+			
+			while(rs.next()) {
+				anni.add(Year.of(rs.getInt("anni")));
+			}
+			
+			conn.close();
+			
+			return anni;
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
