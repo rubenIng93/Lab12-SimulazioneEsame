@@ -83,4 +83,88 @@ public class EventsDao {
 		}
 	}
 
+	public List<Integer> listAllDistrict(Year anno) {
+		
+		String sql = "SELECT DISTINCT district_id FROM events WHERE YEAR(reported_date) = ?";
+		
+		try {
+			
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, anno.getValue());
+			ResultSet rs = st.executeQuery();
+			List<Integer> distretti = new ArrayList<>();
+			
+			while(rs.next()) {
+				distretti.add(rs.getInt("district_id"));
+			}
+			
+			conn.close();
+			
+			return distretti;
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		
+	}
+
+	public Double getLatMedia(Year anno, Integer distretto) {
+		
+		String sql = "SELECT AVG(geo_lat) AS media FROM events WHERE YEAR(reported_date) = ? AND district_id = ?";
+		
+		try {
+			
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, anno.getValue());
+			st.setInt(2, distretto);
+			ResultSet rs = st.executeQuery();
+			
+			if(rs.next()) {
+				conn.close();
+				return rs.getDouble("media");
+			}
+			
+			conn.close();
+			
+			
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+	}
+
+	public Double getLonMedia(Integer distretto, Year anno) {
+		
+		String sql = "SELECT AVG(geo_lon) AS media FROM events WHERE YEAR(reported_date) = ? AND district_id = ?";
+		
+		try {
+			
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, anno.getValue());
+			st.setInt(2, distretto);
+			ResultSet rs = st.executeQuery();
+			
+			if(rs.next()) {
+				conn.close();
+				return rs.getDouble("media");
+			}
+			
+			conn.close();
+			
+			
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+	}
+
 }

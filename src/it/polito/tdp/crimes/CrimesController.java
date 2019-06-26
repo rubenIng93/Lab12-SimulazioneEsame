@@ -7,9 +7,11 @@ package it.polito.tdp.crimes;
 import java.net.URL;
 import java.time.Month;
 import java.time.Year;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.model.Model;
+import it.polito.tdp.model.Vicino;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -50,6 +52,22 @@ public class CrimesController {
 
     @FXML
     void doCreaReteCittadina(ActionEvent event) {
+    	
+    	Year anno;
+    	anno = boxAnno.getValue();
+    	if(anno == null) {
+    		txtResult.appendText("Devi selezionare un anno");
+    		return;
+    	}
+    	this.model.creaGrafo(anno);
+    	
+    	for(Integer d : this.model.getDistretti()) {
+    		List<Vicino> vicini = this.model.getVicini(d);
+    		txtResult.appendText("\nVICINI DI DISTRETTO " + d);
+    		for(Vicino v : vicini) {
+    			txtResult.appendText("\n" + v.getVicino() + " d = " + v.getDistanza());
+    		}
+}
     	
     }
 
